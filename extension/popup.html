@@ -37,8 +37,22 @@ li.separator {
 	opacity: 0.6;
 }
 </style>
+
 <script type="text/javascript" charset="utf-8">
 // <![CDATA[
+	function getTinyUrl(url) {
+		tinyurl = url;
+		xhr = new XMLHttpRequest(); 
+		xhr.timeout = 3000;
+		xhr.onreadystatechange = function() {
+			if(xhr.readyState == 4 && xhr.status==200) {
+				tinyurl = xhr.responseText;
+			}
+		};
+		xhr.open('GET','http://tinyurl.com/api-create.php?url=' + encodeURIComponent(url), false);
+		xhr.send(null);                 
+	}
+
 	function onMenuSelected(tab, id) {
 		if ( id == 'configure' ) {
 			chrome.tabs.create({url:"options.html"});
@@ -52,8 +66,11 @@ li.separator {
 
 			function sendRequestCallbackHandler(response) {
 				// see chrome://makelink/content/help/defininglinktypes.html
+				getTinyUrl(tab.url);
+
 				var text = response.length > 0 ? response : tab.title;
 				var data = def.format.
+					replace(/%tinyurl%/g, tinyurl).
 					replace(/%url%/g, tab.url).
 					replace(/%text%/g, text.replace(/\n/g, ' ')).
 					replace(/%text_n%/g, text).

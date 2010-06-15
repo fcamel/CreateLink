@@ -21,6 +21,6 @@
      "run_at"     : "document_end",
      "all_frames" : true
    }],
-   "permissions": [ "tabs" ],
+   "permissions": [ "tabs", "http://tinyurl.com/" ],
    "version": "0.0.10"
 }
